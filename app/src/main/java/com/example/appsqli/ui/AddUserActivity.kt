@@ -23,6 +23,7 @@ import com.bumptech.glide.Glide
 import com.example.appsqli.R
 import com.example.appsqli.data.model.User
 import com.example.appsqli.databinding.ActivityAddUserBinding
+import com.example.appsqli.databinding.ActivityDetailsBinding
 import com.example.appsqli.util.Coroutines
 import com.example.appsqli.util.UtilExtensions.myToast
 import com.example.appsqli.util.UtilExtensions.setTextEditable
@@ -36,7 +37,8 @@ class AddUserActivity : AppCompatActivity() {
 
     private val viewModel by viewModels<UserViewModel>()
     private var user: User? = null
-    private var _binding: ActivityAddUserBinding? = null;
+    private var _binding: ActivityAddUserBinding? = null
+    private val binding get() = _binding!!
     private val pickImage = 100
     private var imageUri: Uri? = null
     lateinit var icontext: Context;
@@ -46,14 +48,20 @@ class AddUserActivity : AppCompatActivity() {
 
 
 
-    private val binding = _binding!!
+
     private val permissions = arrayOf(
         Manifest.permission.READ_EXTERNAL_STORAGE
     )
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_add_user)
+
+        _binding = ActivityAddUserBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+
+
+
 
         initToolbar()
         user = intent.extras?.getParcelable(MainActivity.USER_DATA)
@@ -76,6 +84,7 @@ class AddUserActivity : AppCompatActivity() {
     }
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
+        circleImageView = findViewById(R.id.image_user)
         if (resultCode == RESULT_OK && requestCode == pickImage) {
             imageUri = data?.data
 
@@ -94,34 +103,34 @@ class AddUserActivity : AppCompatActivity() {
     @SuppressLint("SetTextI18n")
     private fun init(){
 
-    /*    binding.actionBarInfo.actionbarBack.setOnClickListener(View.OnClickListener {
-            val intent = Intent(this, MainActivity::class.java)
-            startActivity(intent)
+        /*    binding.actionBarInfo.actionbarBack.setOnClickListener(View.OnClickListener {
+                val intent = Intent(this, MainActivity::class.java)
+                startActivity(intent)
 
-        })*/
+            })*/
         circleImageView = findViewById<CircleImageView>(R.id.image_user)
 
 
         if (user != null){
 
- /*           text_title.text = getString(R.string.text_update_user)
-            edit_name.setTextEditable(user?.first_name ?: "")
-            edit_email.setTextEditable(user?.email ?: "")
-            edit_phone.setTextEditable(user?.phone ?: "")
-            edit_prenom.setTextEditable(user?.last_name ?: "")
-            edit_ville.setTextEditable(user?.ville ?: "")
-            edit_portable.setTextEditable(user?.portable ?: "")
-            edit_description.setTextEditable(user?.description ?: "")
-            edit_fonction.setTextEditable(user?.fonction ?: "")
-            edit_pays.setTextEditable(user?.pays ?: "")
-            */
-       /*     var uri =
-                Uri.parse(user!!.avatar)
-            circleImageView.setImageURI(uri)
+            /*           text_title.text = getString(R.string.text_update_user)
+                       edit_name.setTextEditable(user?.first_name ?: "")
+                       edit_email.setTextEditable(user?.email ?: "")
+                       edit_phone.setTextEditable(user?.phone ?: "")
+                       edit_prenom.setTextEditable(user?.last_name ?: "")
+                       edit_ville.setTextEditable(user?.ville ?: "")
+                       edit_portable.setTextEditable(user?.portable ?: "")
+                       edit_description.setTextEditable(user?.description ?: "")
+                       edit_fonction.setTextEditable(user?.fonction ?: "")
+                       edit_pays.setTextEditable(user?.pays ?: "")
+                       */
+            /*     var uri =
+                     Uri.parse(user!!.avatar)
+                 circleImageView.setImageURI(uri)
 
-*/
+     */
 
-         binding.actionBarInfo.textTitle.text = getString(R.string.text_update_user)
+            binding.actionBarInfo.textTitle.text = getString(R.string.text_update_user)
             binding.editName.setTextEditable(user?.first_name ?: "")
             binding.editEmail.setTextEditable(user?.email ?: "")
             binding.editPhone.setTextEditable(user?.phone ?: "")
@@ -142,64 +151,69 @@ class AddUserActivity : AppCompatActivity() {
 
             binding.btnDelete.visibility = View.VISIBLE
         }else{
-           // binding. = getString(R.string.text_add_user)
+            // binding. = getString(R.string.text_add_user)
         }
 
 
- /*       binding.imageUser.setOnClickListener {
-            // Check if permission is not granted
-            if (ContextCompat.checkSelfPermission(
-                    requireContext(),
-                    Manifest.permission.READ_EXTERNAL_STORAGE
-                ) == PackageManager.PERMISSION_DENIED
-            ) {
-                // Ask permission
-                requestPermissions(
-                    permissions, 1
-                )
-            } else {
-                // Permission is already granted, open image gallery
-                openGallery()
-            }
-        }*/
+        /*       binding.imageUser.setOnClickListener {
+                   // Check if permission is not granted
+                   if (ContextCompat.checkSelfPermission(
+                           requireContext(),
+                           Manifest.permission.READ_EXTERNAL_STORAGE
+                       ) == PackageManager.PERMISSION_DENIED
+                   ) {
+                       // Ask permission
+                       requestPermissions(
+                           permissions, 1
+                       )
+                   } else {
+                       // Permission is already granted, open image gallery
+                       openGallery()
+                   }
+               }*/
     }
 
     private fun saveData() {
 
 
         val id = if (user != null) user?.id else null
-        val name = binding.editName.toString().trim()
-        val prenom = binding.editPrenom.toString().trim()
-        val phone = binding.editPhone.toString().trim()
-        val email = binding.editEmail.toString().trim()
-        val ville = binding.editVille.toString().trim()
-        val portable = binding.editPortable.toString().trim()
-        val description  = binding.editDescription.toString().trim()
-        val fonction  = binding.editFonction.toString().trim()
-        val pays  = binding.editPays.toString().trim()
+        val name = binding.editName.text.toString().trim()
+        val prenom = binding.editPrenom.text.toString().trim()
+        val phone = binding.editPhone.text.toString().trim()
+        val email = binding.editEmail.text.toString().trim()
+        val ville = binding.editVille.text.toString().trim()
+        val portable = binding.editPortable.text.toString().trim()
+        val description  = binding.editDescription.text.toString().trim()
+        val fonction  = binding.editFonction.text.toString().trim()
+        val pays  = binding.editPays.text.toString().trim()
 
         val avatar = imageUri.toString()
-        var uri =
-            Uri.parse(user!!.avatar)
-        circleImageView.setImageURI(uri)
+//        var uri =
+//            Uri.parse(user!!.avatar)
+//        circleImageView.setImageURI(uri)
+        if (user != null) {
+            var uri = Uri.parse(user!!.avatar)
+            circleImageView.setImageURI(uri)
+        }
 
 
 
 
 
-       /* val name = edit_name.text.toString().trim()
-        val email = edit_email.text.toString().trim()
-        val phone = edit_phone.text.toString().trim()
-        val prenom = edit_prenom.text.toString().trim()
-        val ville = edit_ville.text.toString().trim()
-        val pays = edit_pays.text.toString().trim()
-        val portable = edit_portable.text.toString().trim()
-        val description = edit_description.text.toString().trim()
-        val fonction = edit_fonction.text.toString().trim()
-        val avatar = imageUri.toString()*/
-       /*var uri =
-            Uri.parse(user!!.avatar)
-        circleImageView.setImageURI(uri)*/
+
+        /* val name = edit_name.text.toString().trim()
+         val email = edit_email.text.toString().trim()
+         val phone = edit_phone.text.toString().trim()
+         val prenom = edit_prenom.text.toString().trim()
+         val ville = edit_ville.text.toString().trim()
+         val pays = edit_pays.text.toString().trim()
+         val portable = edit_portable.text.toString().trim()
+         val description = edit_description.text.toString().trim()
+         val fonction = edit_fonction.text.toString().trim()
+         val avatar = imageUri.toString()*/
+        /*var uri =
+             Uri.parse(user!!.avatar)
+         circleImageView.setImageURI(uri)*/
 
 
         if (name.isEmpty() || email.isEmpty() || phone.isEmpty()) {
@@ -208,7 +222,7 @@ class AddUserActivity : AppCompatActivity() {
         }
 
         val user = User(id = id, first_name = name, email = email, mobile = phone,
-                 last_name =prenom, pays = pays, description = description,
+            last_name =prenom, pays = pays, description = description,
             fonction = fonction,ville=ville, portable = portable, avatar = avatar.toString(),
         )
         Coroutines.main {
